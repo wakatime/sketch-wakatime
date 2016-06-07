@@ -8,11 +8,11 @@ Note: Only works with Sketch 3.8 and newer. Download Sketch 3.8 Beta [here](http
 ## Installation
 
 
-1. Download the [latest plugin release](https://github.com/wakatime/sketch-wakatime/releases/latest).
+1. Download the [latest release](https://github.com/wakatime/sketch-wakatime/releases/latest).
 
 2. Unzip the file.
 
-3. Open the WakaTime.sketch-plugin file to install the plugin.
+3. Open the `WakaTime.sketchplugin` file to install the plugin.
 
 4. Use Sketch like you normally do and your time will automatically be tracked for you.
 
