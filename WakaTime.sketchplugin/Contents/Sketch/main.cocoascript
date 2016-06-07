@@ -1,0 +1,139 @@
+@import "library.cocoascript";
+@import "utils.cocoascript";
+
+var VERSION = null; // defined in event handler scope
+var SKETCH_VERSION = null; // defined in event handler scope
+var FREQUENCY = 2;
+var CONFIG_FILE = NSHomeDirectory() + '/.wakatime.cfg';
+var WAKATIME_CLI = 'wakatime/cli.py'; // modified in event handler scope
+var LAST_FILE = 'WAKATIME_last_file';
+var LAST_TIME = 'WAKATIME_last_heartbeat';
+
+var onRun = function(context) {
+  promptForApiKey();
+};
+
+var onSelectionChanged = function(context) {
+
+  // set context globals
+  VERSION = context.plugin.version();
+  SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
+  var contentsDir = utils.stripFile(context.plugin.url()) + 'Contents/';
+  WAKATIME_CLI = contentsDir + 'Resources/' + WAKATIME_CLI;
+
+  var action = context.actionContext;
+  var document = action.document;
+  var currentFile = document.fileURL();
+  if (!currentFile) {
+    //log('Skipping file because not saved to disk.');
+    return;
+  }
+  currentFile = utils.stripFile(currentFile.toString());
+  var currentTime = [NSDate date];
+
+  var lastFile = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FILE];
+  var lastTime = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TIME];
+  if (!lastTime) lastTime = [currentTime dateByAddingTimeInterval:-60 * FREQUENCY];
+  
+  var seconds = [currentTime timeIntervalSinceDate:lastTime];
+  if (lastFile != currentFile || seconds > FREQUENCY * 60) {
+    lastFile = currentFile;
+    lastTime = currentTime;
+    [[NSUserDefaults standardUserDefaults] setObject:currentFile forKey:LAST_FILE]
+    [[NSUserDefaults standardUserDefaults] setObject:currentTime forKey:LAST_TIME]
+    [[NSUserDefaults standardUserDefaults] synchronize]
+    sendHeartbeat(currentFile, false);
+  }
+};
+
+var sendHeartbeat = function(file, isWrite) {
+
+  // make sure api key is set in ~/.wakatime.cfg file
+  var api_key = getApiKey();
+  if (!utils.isValidApiKey(api_key)) promptForApiKey();
+
+  var args = [
+    WAKATIME_CLI,
+    '--file',
+    file,
+    '--plugin',
+    'sketch/' + SKETCH_VERSION + ' sketch-wakatime/' + VERSION,
+  ];
+  if (isWrite)
+    args.push('--write');
+
+  //log(args);
+
+  // run wakatime-cli in separate process
+  var task = [[NSTask alloc] init];
+  [task setLaunchPath: '/usr/bin/python'];
+  [task setArguments: args];
+  [task launch];
+};
+
+var getApiKey = function() {
+  var contents = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
+  if (contents) {
+    var lines = contents.split('\n');
+    for (var line in lines) {
+      line = lines[line];
+      var line = line.split('=');
+      if (line.length == 2) {
+        var key = line[0].trim();
+        if (key == 'api_key') {
+          var value = line[1].trim();
+          return value;
+        }
+      }
+    }
+  }
+  return null;
+};
+
+var setApiKey = function(api_key) {
+  var new_contents = [];
+  var found = false;
+  var contents = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
+  if (contents) {
+    var lines = contents.split('\n');
+    for (var i in lines) {
+      line = lines[i];
+      var line = line.split('=');
+      if (line.length == 2) {
+        var key = line[0].trim();
+        if (key == 'api_key') {
+          found = true;
+          new_contents.push('api_key = ' + api_key);
+        } else {
+          new_contents.push(lines[i]);
+        }
+      } else {
+        new_contents.push(lines[i]);
+      }
+    }
+  }
+  if (new_contents.length == 0 || !found) {
+    new_contents = [
+      '[settings]',
+      'api_key = ' + api_key,
+    ];
+  }
+  var error = null;
+  [[NSString stringWithFormat:"%@", new_contents.join('\n')] writeToFile:CONFIG_FILE atomically:true encoding:NSASCIIStringEncoding error:error];
+  if (error)
+    log('Error: ' + [error localizedDescription]);
+};
+
+var promptForApiKey = function() {
+  var api_key = getApiKey();
+  var alert = [NSAlert alertWithMessageText:'Enter your api key from wakatime.com' defaultButton:null alternateButton:null otherButton:null informativeTextWithFormat:''];
+  var input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
+  if (api_key) {
+    [input setStringValue:api_key];
+  }
+  [alert setAccessoryView:input];
+  [alert runModal];
+  api_key = [input stringValue];
+  setApiKey(api_key);
+  return api_key;
+}
