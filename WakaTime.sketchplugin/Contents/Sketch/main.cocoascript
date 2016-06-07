@@ -18,7 +18,7 @@ var onSelectionChanged = function(context) {
   // set context globals
   VERSION = context.plugin.version();
   SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
-  var contentsDir = utils.stripFile(context.plugin.url()) + 'Contents/';
+  var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
   WAKATIME_CLI = contentsDir + 'Resources/' + WAKATIME_CLI;
 
   var action = context.actionContext;
