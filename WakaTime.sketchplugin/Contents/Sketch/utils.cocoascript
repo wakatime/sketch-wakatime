@@ -7,13 +7,6 @@ utils.isValidApiKey = function(key) {
   return re.test(key);
 };
 
-utils.getJSON = function(url) {
-  var request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-  var response = [NSURLConnection sendSynchronousRequest:request returningResponse:null error:null];
-  var responseObj = [NSJSONSerialization JSONObjectWithData:response options:null error:null];
-  return responseObj;
-};
-
 utils.stripFile = function(path) {
   path = path.toString();
   if (path.indexOf('file://') == 0)
