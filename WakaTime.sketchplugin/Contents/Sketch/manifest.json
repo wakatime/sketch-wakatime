@@ -17,6 +17,7 @@
       "script" : "main.cocoascript",
       "handlers" : {
         "actions" : {
+           "Startup" : "onStartup",
            "SelectionChanged.finish" : "onSelectionChanged"
         }
       }

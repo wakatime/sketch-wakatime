@@ -9,6 +9,17 @@ var WAKATIME_CLI = 'wakatime/cli.py'; // modified in event handler scope
 var LAST_FILE = 'WAKATIME_last_file';
 var LAST_TIME = 'WAKATIME_last_heartbeat';
 
+var onStartup = function(context) {
+  //VERSION = context.plugin.version();
+  //log('Initializing WakaTime v' + VERSION + '...');
+
+  // make sure api key is set in ~/.wakatime.cfg file
+  var api_key = getApiKey();
+  if (!utils.isValidApiKey(api_key)) promptForApiKey();
+  
+  //log('Finished initializing WakaTime');
+};
+
 var onRun = function(context) {
   promptForApiKey();
 };
@@ -47,11 +58,6 @@ var onSelectionChanged = function(context) {
 };
 
 var sendHeartbeat = function(file, isWrite) {
-
-  // make sure api key is set in ~/.wakatime.cfg file
-  var api_key = getApiKey();
-  if (!utils.isValidApiKey(api_key)) promptForApiKey();
-
   var args = [
     WAKATIME_CLI,
     '--file',
