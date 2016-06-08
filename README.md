@@ -2,7 +2,7 @@
 
 Time tracking and metrics automatically generated from your Sketch usage.
 
-Note: Only works with Sketch 3.8 and newer. Download Sketch 3.8 Beta [here](http://www.sketchapp.com/beta/).
+Note: Only works with Sketch 3.8 and newer. Download Sketch 3.8 [here](http://www.sketchapp.com/).
 
 
 ## Installation
