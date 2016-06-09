@@ -3,6 +3,13 @@ History
 -------
 
 
+1.0.3 (2016-06-09)
+++++++++++++++++++
+
+- Improve performance by keeping plugin around until Sketch app quits, and
+  storing state in memory instead of NSUserDefaults.
+
+
 1.0.2 (2016-06-08)
 ++++++++++++++++++
 
