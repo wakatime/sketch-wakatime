@@ -1,23 +1,33 @@
 @import "library.cocoascript";
 @import "utils.cocoascript";
 
-var VERSION = null; // defined in event handler scope
-var SKETCH_VERSION = null; // defined in event handler scope
+// constants
 var FREQUENCY = 2;
 var CONFIG_FILE = NSHomeDirectory() + '/.wakatime.cfg';
-var WAKATIME_CLI = 'wakatime/cli.py'; // modified in event handler scope
-var LAST_FILE = 'WAKATIME_last_file';
-var LAST_TIME = 'WAKATIME_last_heartbeat';
+
+// globals
+var LAST_FILE = '';
+var LAST_TIME = null;
+
+// lazy-loaded constants
+var VERSION = null; // defined in event handler scope
+var SKETCH_VERSION = null; // defined in event handler scope
+var WAKATIME_CLI = null; // defined in event handler scope
 
 var onStartup = function(context) {
-  //VERSION = context.plugin.version();
-  //log('Initializing WakaTime v' + VERSION + '...');
+  coscript.setShouldKeepAround(true);
+
+  // set context globals
+  VERSION = context.plugin.version();
+  SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
+  var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
+  WAKATIME_CLI = contentsDir + 'Resources/wakatime/cli.py';
+
+  log('Initializing WakaTime v' + VERSION + '...');
 
   // make sure api key is set in ~/.wakatime.cfg file
   var api_key = getApiKey();
   if (!utils.isValidApiKey(api_key)) promptForApiKey();
-  
-  //log('Finished initializing WakaTime');
 };
 
 var onRun = function(context) {
@@ -25,13 +35,6 @@ var onRun = function(context) {
 };
 
 var onSelectionChanged = function(context) {
-
-  // set context globals
-  VERSION = context.plugin.version();
-  SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
-  var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
-  WAKATIME_CLI = contentsDir + 'Resources/' + WAKATIME_CLI;
-
   var action = context.actionContext;
   var document = action.document;
   var currentFile = document.fileURL();
@@ -39,20 +42,15 @@ var onSelectionChanged = function(context) {
     //log('Skipping file because not saved to disk.');
     return;
   }
+
   currentFile = utils.stripFile(currentFile.toString());
   var currentTime = [NSDate date];
-
-  var lastFile = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FILE];
-  var lastTime = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TIME];
-  if (!lastTime) lastTime = [currentTime dateByAddingTimeInterval:-60 * FREQUENCY];
+  if (!LAST_TIME) LAST_TIME = [currentTime dateByAddingTimeInterval:-60 * FREQUENCY];
   
-  var seconds = [currentTime timeIntervalSinceDate:lastTime];
-  if (lastFile != currentFile || seconds > FREQUENCY * 60) {
-    lastFile = currentFile;
-    lastTime = currentTime;
-    [[NSUserDefaults standardUserDefaults] setObject:currentFile forKey:LAST_FILE]
-    [[NSUserDefaults standardUserDefaults] setObject:currentTime forKey:LAST_TIME]
-    [[NSUserDefaults standardUserDefaults] synchronize]
+  var seconds = [currentTime timeIntervalSinceDate:LAST_TIME];
+  if (LAST_FILE != currentFile || seconds > FREQUENCY * 60) {
+    LAST_FILE = currentFile;
+    LAST_TIME = currentTime;
     sendHeartbeat(currentFile, false);
   }
 };
@@ -68,7 +66,7 @@ var sendHeartbeat = function(file, isWrite) {
   if (isWrite)
     args.push('--write');
 
-  //log(args);
+  //log('/usr/bin/python ' + args);
 
   // run wakatime-cli in separate process
   var task = [[NSTask alloc] init];
