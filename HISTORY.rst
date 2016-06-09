@@ -3,6 +3,13 @@ History
 -------
 
 
+1.0.4 (2016-06-09)
+++++++++++++++++++
+
+- Upgrade wakatime-cli to v6.0.4 to fix bug in urllib3 package causing
+  unhandled retry exceptions.
+
+
 1.0.3 (2016-06-09)
 ++++++++++++++++++
 
