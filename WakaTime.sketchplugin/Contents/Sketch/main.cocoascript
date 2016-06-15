@@ -4,7 +4,6 @@
 
 // constants
 var FREQUENCY = 2;
-var CONFIG_FILE = NSHomeDirectory() + '/.wakatime.cfg';
 
 // globals
 var LAST_FILE = '';
@@ -14,6 +13,7 @@ var LAST_TIME = null;
 var VERSION = null; // defined in event handler scope
 var SKETCH_VERSION = null; // defined in event handler scope
 var WAKATIME_CLI = null; // defined in event handler scope
+var DEBUG_ENABLED = false;
 
 var onStartup = function(context) {
   coscript.setShouldKeepAround(true);
@@ -23,8 +23,9 @@ var onStartup = function(context) {
   SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
   var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
   WAKATIME_CLI = contentsDir + 'Resources/wakatime/cli.py';
+  DEBUG_ENABLED = ini.getConfig('settings', 'debug') == 'true';
 
-  //log('Initializing WakaTime v' + VERSION + '...');
+  debug('Initializing WakaTime v' + VERSION + '...');
 
   // make sure api key is set in ~/.wakatime.cfg file
   var api_key = ini.getConfig('settings', 'api_key');
@@ -40,7 +41,7 @@ var onSelectionChanged = function(context) {
   var document = action.document;
   var currentFile = document.fileURL();
   if (!currentFile) {
-    //log('Skipping file because not saved to disk.');
+    debug('Skipping current drawing because not saved to disk.');
     return;
   }
 
@@ -53,10 +54,14 @@ var onSelectionChanged = function(context) {
     LAST_FILE = currentFile;
     LAST_TIME = currentTime;
     sendHeartbeat(currentFile, false);
+  } else {
+    debug('Skipping current drawing because not enough time passed:' + currentFile);
   }
 };
 
 var sendHeartbeat = function(file, isWrite) {
+  debug('Sending heartbeat for current drawing:' + file);
+
   var args = [
     WAKATIME_CLI,
     '--file',
@@ -67,7 +72,7 @@ var sendHeartbeat = function(file, isWrite) {
   if (isWrite)
     args.push('--write');
 
-  //log('/usr/bin/python ' + args);
+  debug('/usr/bin/python ' + args.join(' '));
 
   // run wakatime-cli in separate process
   var task = [[NSTask alloc] init];
@@ -89,3 +94,7 @@ var promptForApiKey = function() {
   ini.setConfig('settings', 'api_key', api_key);
   return api_key;
 }
+
+var debug = function(msg) {
+  if (DEBUG_ENABLED) log('[WakaTime] [DEBUG] ' + msg);
+};
