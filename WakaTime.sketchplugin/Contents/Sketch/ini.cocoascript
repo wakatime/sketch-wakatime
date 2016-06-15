@@ -1,0 +1,70 @@
+
+var ini = {};
+
+ini.getConfig = function(section, key) {
+  var currentSection = '';
+  var contents = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
+  if (contents) {
+    var lines = contents.split('\n');
+    for (var line in lines) {
+      var line = lines[line];
+
+      if (line.trim().indexOf('[') == 0 && line.trim().indexOf(']') == line.length - 1) {
+        currentSection = line.trim().substring(1, line.trim().length - 1).toLowerCase();
+      } else if (section.toLowerCase() == currentSection) {
+        var parts = line.split('=');
+        if (parts.length == 2 && parts[0].trim() == key) {
+          return parts[1].trim();
+        }
+      }
+
+    }
+  }
+  return null;
+};
+
+ini.setConfig = function(section, key, val) {
+  var contents = [];
+  var currentSection = '';
+  var found = false;
+  var inp = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
+  if (inp) {
+    var lines = inp.split('\n');
+    for (var i in lines) {
+      var line = lines[i];
+      if (line.trim().indexOf('[') == 0 && line.trim().indexOf(']') == line.length - 1) {
+        if (section.toLowerCase() == currentSection && !found) {
+          contents.push(key + ' = ' + val);
+          found = true;
+        }
+        currentSection = line.trim().substring(1, line.trim().length - 1).toLowerCase();
+        contents.push(line);
+      } else if (section.toLowerCase() == currentSection) {
+        var parts = line.split('=');
+        var currentKey = parts[0].trim();
+        if (currentKey == key) {
+          if (!found) {
+            contents.push(key + ' = ' + val);
+            found = true;
+          }
+        } else {
+          contents.push(line);
+        }
+      } else {
+        contents.push(line);
+      }
+    }
+  }
+
+  if (!found) {
+    if (section.toLowerCase() != currentSection) {
+      contents.push('[' + section.toLowerCase() + ']');
+    }
+    contents.push(key + ' = ' + val);
+  }
+
+  var error = null;
+  [[NSString stringWithFormat:"%@", contents.join('\n')] writeToFile:CONFIG_FILE atomically:true encoding:NSASCIIStringEncoding error:error];
+  if (error)
+    log('Error: ' + [error localizedDescription]);
+};

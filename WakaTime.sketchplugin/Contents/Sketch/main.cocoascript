@@ -1,4 +1,5 @@
 @import "library.cocoascript";
+@import "ini.cocoascript";
 @import "utils.cocoascript";
 
 // constants
@@ -23,10 +24,10 @@ var onStartup = function(context) {
   var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
   WAKATIME_CLI = contentsDir + 'Resources/wakatime/cli.py';
 
-  log('Initializing WakaTime v' + VERSION + '...');
+  //log('Initializing WakaTime v' + VERSION + '...');
 
   // make sure api key is set in ~/.wakatime.cfg file
-  var api_key = getApiKey();
+  var api_key = ini.getConfig('settings', 'api_key');
   if (!utils.isValidApiKey(api_key)) promptForApiKey();
 };
 
@@ -75,61 +76,8 @@ var sendHeartbeat = function(file, isWrite) {
   [task launch];
 };
 
-var getApiKey = function() {
-  var contents = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
-  if (contents) {
-    var lines = contents.split('\n');
-    for (var line in lines) {
-      line = lines[line];
-      var line = line.split('=');
-      if (line.length == 2) {
-        var key = line[0].trim();
-        if (key == 'api_key') {
-          var value = line[1].trim();
-          return value;
-        }
-      }
-    }
-  }
-  return null;
-};
-
-var setApiKey = function(api_key) {
-  var new_contents = [];
-  var found = false;
-  var contents = [NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];[NSString stringWithContentsOfFile:CONFIG_FILE encoding:NSUTF8StringEncoding error:null];
-  if (contents) {
-    var lines = contents.split('\n');
-    for (var i in lines) {
-      line = lines[i];
-      var line = line.split('=');
-      if (line.length == 2) {
-        var key = line[0].trim();
-        if (key == 'api_key') {
-          found = true;
-          new_contents.push('api_key = ' + api_key);
-        } else {
-          new_contents.push(lines[i]);
-        }
-      } else {
-        new_contents.push(lines[i]);
-      }
-    }
-  }
-  if (new_contents.length == 0 || !found) {
-    new_contents = [
-      '[settings]',
-      'api_key = ' + api_key,
-    ];
-  }
-  var error = null;
-  [[NSString stringWithFormat:"%@", new_contents.join('\n')] writeToFile:CONFIG_FILE atomically:true encoding:NSASCIIStringEncoding error:error];
-  if (error)
-    log('Error: ' + [error localizedDescription]);
-};
-
 var promptForApiKey = function() {
-  var api_key = getApiKey();
+  var api_key = ini.getConfig('settings', 'api_key');
   var alert = [NSAlert alertWithMessageText:'Enter your api key from wakatime.com' defaultButton:null alternateButton:null otherButton:null informativeTextWithFormat:''];
   var input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
   if (api_key) {
@@ -138,6 +86,6 @@ var promptForApiKey = function() {
   [alert setAccessoryView:input];
   [alert runModal];
   api_key = [input stringValue];
-  setApiKey(api_key);
+  ini.setConfig('settings', 'api_key', api_key);
   return api_key;
 }
