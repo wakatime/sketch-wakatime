@@ -3,6 +3,13 @@ History
 -------
 
 
+1.0.5 (2016-06-15)
+++++++++++++++++++
+
+- Log verbose messages to System Console app when debug is true.
+- Upgrade wakatime-cli to v6.0.5.
+
+
 1.0.4 (2016-06-09)
 ++++++++++++++++++
 
