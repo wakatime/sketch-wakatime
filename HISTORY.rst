@@ -3,6 +3,13 @@ History
 -------
 
 
+1.0.6 (2016-06-17)
+++++++++++++++++++
+
+- URL decode currently open file into path.
+- Upgrade wakatime-cli to v6.0.6.
+
+
 1.0.5 (2016-06-15)
 ++++++++++++++++++
 
