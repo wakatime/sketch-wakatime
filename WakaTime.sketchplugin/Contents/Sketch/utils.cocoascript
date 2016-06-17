@@ -7,8 +7,8 @@ utils.isValidApiKey = function(key) {
   return re.test(key);
 };
 
-utils.stripFile = function(path) {
-  path = path.toString();
+utils.urlToPath = function(path) {
+  path = decodeURIComponent(path.toString());
   if (path.indexOf('file://') == 0)
     path = path.substring(7);
   return path;

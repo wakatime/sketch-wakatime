@@ -21,7 +21,7 @@ var onStartup = function(context) {
   // set context globals
   VERSION = context.plugin.version();
   SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
-  var contentsDir = decodeURIComponent(utils.stripFile(context.plugin.url())) + 'Contents/';
+  var contentsDir = utils.urlToPath(context.plugin.url()) + 'Contents/';
   WAKATIME_CLI = contentsDir + 'Resources/wakatime/cli.py';
   DEBUG_ENABLED = ini.getConfig('settings', 'debug') == 'true';
 
@@ -45,7 +45,7 @@ var onSelectionChanged = function(context) {
     return;
   }
 
-  currentFile = utils.stripFile(currentFile.toString());
+  currentFile = utils.urlToPath(currentFile);
   var currentTime = [NSDate date];
   if (!LAST_TIME) LAST_TIME = [currentTime dateByAddingTimeInterval:-60 * FREQUENCY];
   
