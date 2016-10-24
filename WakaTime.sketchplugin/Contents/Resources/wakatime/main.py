@@ -74,6 +74,12 @@ def parseConfigFile(configFile=None):
     at ~/.wakatime.cfg.
     """
 
+    # get config file location from ENV
+    home = os.environ.get('WAKATIME_HOME')
+    if not configFile and home:
+        configFile = os.path.join(os.path.expanduser(home), '.wakatime.cfg')
+
+    # use default config file location
     if not configFile:
         configFile = os.path.join(os.path.expanduser('~'), '.wakatime.cfg')
 
@@ -86,7 +92,8 @@ def parseConfigFile(configFile=None):
                 print(traceback.format_exc())
                 return None
     except IOError:
-        print(u('Error: Could not read from config file {0}').format(u(configFile)))
+        sys.stderr.write(u("Error: Could not read from config file {0}\n").format(u(configFile)))
+        raise SystemExit(CONFIG_FILE_PARSE_ERROR)
     return configs
 
 
@@ -197,7 +204,10 @@ def parseArguments():
         if default_key:
             args.key = default_key
         else:
-            parser.error('Missing api key')
+            try:
+                parser.error('Missing api key')
+            except SystemExit:
+                raise SystemExit(AUTH_ERROR)
     if not args.entity:
         if args.file:
             args.entity = args.file
@@ -240,6 +250,9 @@ def parseArguments():
         args.verbose = configs.getboolean('settings', 'debug')
     if not args.logfile and configs.has_option('settings', 'logfile'):
         args.logfile = configs.get('settings', 'logfile')
+    if not args.logfile and os.environ.get('WAKATIME_HOME'):
+        home = os.environ.get('WAKATIME_HOME')
+        args.logfile = os.path.join(os.path.expanduser(home), '.wakatime.log')
     if not args.api_url and configs.has_option('settings', 'api_url'):
         args.api_url = configs.get('settings', 'api_url')
     if not args.timeout and configs.has_option('settings', 'timeout'):
@@ -471,6 +484,17 @@ def sync_offline_heartbeats(args, hostname):
     return SUCCESS
 
 
+def format_file_path(filepath):
+    """Formats a path as absolute and with the correct platform separator."""
+
+    try:
+        filepath = os.path.realpath(os.path.abspath(filepath))
+        filepath = re.sub(r'[/\\]', os.path.sep, filepath)
+    except:
+        pass  # pragma: nocover
+    return filepath
+
+
 def process_heartbeat(args, configs, hostname, heartbeat):
     exclude = should_exclude(heartbeat['entity'], args.include, args.exclude)
     if exclude is not False:
@@ -481,6 +505,9 @@ def process_heartbeat(args, configs, hostname, heartbeat):
 
     if heartbeat.get('entity_type') not in ['file', 'domain', 'app']:
         heartbeat['entity_type'] = 'file'
+
+    if heartbeat['entity_type'] == 'file':
+        heartbeat['entity'] = format_file_path(heartbeat['entity'])
 
     if heartbeat['entity_type'] != 'file' or os.path.isfile(heartbeat['entity']):
 
@@ -545,6 +572,6 @@ def execute(argv=None):
         return retval
 
     except:
-        log.traceback()
+        log.traceback(logging.ERROR)
         print(traceback.format_exc())
         return UNKNOWN_ERROR
