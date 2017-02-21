@@ -1,7 +1,7 @@
 {
   "name" : "WakaTime",
   "identifier" : "com.wakatime.sketch.plugin",
-  "version" : "1.0.8",
+  "version" : "1.0.9",
   "description" : "Time tracking and metrics automatically generated from your Sketch usage.",
   "author" : "WakaTime",
   "authorEmail" : "support@wakatime.com",
