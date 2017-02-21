@@ -48,7 +48,7 @@ var onSelectionChanged = function(context) {
   currentFile = utils.urlToPath(currentFile);
   var currentTime = [NSDate date];
   if (!LAST_TIME) LAST_TIME = [currentTime dateByAddingTimeInterval:-60 * FREQUENCY];
-  
+
   var seconds = [currentTime timeIntervalSinceDate:LAST_TIME];
   if (LAST_FILE != currentFile || seconds > FREQUENCY * 60) {
     LAST_FILE = currentFile;
