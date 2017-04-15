@@ -26,7 +26,7 @@ Time tracking and metrics automatically generated from your [Sketch](http://www.
 
 ## Configuring
 
-To change your api key, copy it from your [Settings page](https://wakatime.com/settings#apikey), then paste into Sketch `Plugins -> WakaTime`.
+To change your api key, copy it from your [Settings page](https://wakatime.com/settings#apikey), then paste into Sketch `Plugins → WakaTime`.
 
 Additional settings are in `$HOME/.wakatime.cfg` for [wakatime cli](https://github.com/wakatime/wakatime#configuring).
 
