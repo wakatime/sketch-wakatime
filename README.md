@@ -28,11 +28,13 @@ Time tracking and metrics automatically generated from your [Sketch](http://www.
 
 To change your api key, copy it from your [Settings page](https://wakatime.com/settings#apikey), then paste into Sketch `Plugins → WakaTime`.
 
+### Turn off Safari Web Inspector
+
+Uncheck the setting in Safari → Develop → [computer name] → Automatically Show Web Inspector for JSContexts.
+
+![Turn off Web Inspector](./safari-web-inspector.png)
+
 Additional settings are in `$HOME/.wakatime.cfg` for [wakatime cli](https://github.com/wakatime/wakatime#configuring).
-
-
-
-For more general troubleshooting information, see [wakatime/wakatime#troubleshooting](https://github.com/wakatime/wakatime#troubleshooting).
 
 
 ## Troubleshooting
