@@ -5,6 +5,7 @@
   "description" : "Time tracking and metrics automatically generated from your Sketch usage.",
   "author" : "WakaTime",
   "authorEmail" : "support@wakatime.com",
+  "appcast": "https://raw.githubusercontent.com/wakatime/sketch-wakatime/master/appcast.xml",
   "commands" : [
     {
       "name" : "WakaTime",
