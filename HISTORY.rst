@@ -3,6 +3,12 @@ History
 -------
 
 
+1.0.11 (2017-06-01)
+++++++++++++++++++
+
+- Support automatic plugin updates using Sketch Appcast updates.
+
+
 1.0.10 (2017-05-24)
 ++++++++++++++++++
 
