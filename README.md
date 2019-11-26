@@ -1,5 +1,7 @@
 # sketch-wakatime
 
+[![Coding time tracker](https://wakatime.com/badge/github/wakatime/sketch-wakatime.svg)](https://wakatime.com/badge/github/wakatime/sketch-wakatime)
+
 Time tracking and metrics automatically generated from your [Sketch](http://www.sketchapp.com/) usage.
 
 
