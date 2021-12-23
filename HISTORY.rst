@@ -3,6 +3,12 @@ History
 -------
 
 
+3.0.0 (2021-12-23)
+++++++++++++++++++
+
+- Use new Go wakatime-cli from GitHub Releases, with auto-updating.
+
+
 2.0.0 (2018-12-19)
 ++++++++++++++++++
 
