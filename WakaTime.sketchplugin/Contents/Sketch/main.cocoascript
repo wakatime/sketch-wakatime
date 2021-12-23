@@ -63,8 +63,7 @@ var sendHeartbeat = function(file, isWrite) {
   debug('Sending heartbeat for current drawing:' + file);
 
   var args = [
-    WAKATIME_CLI,
-    '--file',
+    '--entity',
     file,
     '--plugin',
     'sketch/' + SKETCH_VERSION + ' sketch-wakatime/' + VERSION,
@@ -72,11 +71,11 @@ var sendHeartbeat = function(file, isWrite) {
   if (isWrite)
     args.push('--write');
 
-  debug('/usr/bin/python ' + args.join(' '));
+  debug(WAKATIME_CLI + args.join(' '));
 
   // run wakatime-cli in separate process
   var task = [[NSTask alloc] init];
-  [task setLaunchPath: '/usr/bin/python'];
+  [task setLaunchPath: WAKATIME_CLI];
   [task setArguments: args];
   [task launch];
 };
