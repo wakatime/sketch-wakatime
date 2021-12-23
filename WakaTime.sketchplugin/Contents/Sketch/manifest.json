@@ -10,7 +10,7 @@
     {
       "name" : "WakaTime",
       "script" : "main.cocoascript",
-      "handler" : "onRun",
+      "handler" : "promptForApiKey",
       "identifier": "wakatime",
       "shortcut": ""
     },

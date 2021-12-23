@@ -12,6 +12,7 @@ var LAST_TIME = null;
 // lazy-loaded constants
 var VERSION = null; // defined in event handler scope
 var SKETCH_VERSION = null; // defined in event handler scope
+var INSTALL_SCRIPT = null; // defined in event handler scope
 var WAKATIME_CLI = null; // defined in event handler scope
 var DEBUG_ENABLED = false;
 
@@ -22,18 +23,17 @@ var onStartup = function(context) {
   VERSION = context.plugin.version();
   SKETCH_VERSION = [[[NSBundle mainBundle] infoDictionary] objectForKey:'CFBundleShortVersionString'];
   var contentsDir = utils.urlToPath(context.plugin.url()) + 'Contents/';
-  WAKATIME_CLI = contentsDir + 'Resources/wakatime/cli.py';
+  INSTALL_SCRIPT = contentsDir + 'Resources/install_cli.py';
+  WAKATIME_CLI = NSHomeDirectory() + '/.wakatime/wakatime-cli';
   DEBUG_ENABLED = ini.getConfig('settings', 'debug') == 'true';
 
   debug('Initializing WakaTime v' + VERSION + '...');
 
+  installCLI();
+
   // make sure api key is set in ~/.wakatime.cfg file
   var api_key = ini.getConfig('settings', 'api_key');
   if (!utils.isValidApiKey(api_key)) promptForApiKey();
-};
-
-var onRun = function(context) {
-  promptForApiKey();
 };
 
 var onSelectionChanged = function(context) {
@@ -78,6 +78,17 @@ var sendHeartbeat = function(file, isWrite) {
   var task = [[NSTask alloc] init];
   [task setLaunchPath: '/usr/bin/python'];
   [task setArguments: args];
+  [task launch];
+};
+
+var installCLI = function() {
+  debug('Checking for wakatime-cli updates...');
+  debug('/usr/bin/python ' + INSTALL_SCRIPT);
+
+  // run wakatime-cli in separate process
+  var task = [[NSTask alloc] init];
+  [task setLaunchPath: '/usr/bin/python'];
+  [task setArguments: [INSTALL_SCRIPT]];
   [task launch];
 };
 
