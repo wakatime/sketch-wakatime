@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import re
+import shutil
 import ssl
 import subprocess
 import sys
@@ -26,13 +27,20 @@ except ImportError:
     from urllib.error import HTTPError
 
 
+def getOsName():
+    os = platform.system().lower()
+    if os.startswith('cygwin') or os.startswith('mingw') or os.startswith('msys'):
+        return 'windows'
+    return os
+
+
 GITHUB_RELEASES_STABLE_URL = 'https://api.github.com/repos/wakatime/wakatime-cli/releases/latest'
 GITHUB_DOWNLOAD_PREFIX = 'https://github.com/wakatime/wakatime-cli/releases/download'
 PLUGIN = 'sketch'
 
 is_py2 = (sys.version_info[0] == 2)
 is_py3 = (sys.version_info[0] == 3)
-is_win = platform.system() == 'Windows'
+is_win = getOsName() == 'windows'
 
 HOME_FOLDER = None
 CONFIGS = None
@@ -49,10 +57,7 @@ def main(home=None):
     if not isCliLatest():
         downloadCLI()
 
-    try:
-        os.symlink(getCliLocation(), os.path.join(getResourcesFolder(), 'wakatime-cli'))
-    except:
-        pass
+    createSymlink()
 
 
 if is_py2:
@@ -110,14 +115,14 @@ class Popen(subprocess.Popen):
     """Patched Popen to prevent opening cmd window on Windows platform."""
 
     def __init__(self, *args, **kwargs):
-        startupinfo = kwargs.get('startupinfo')
-        if is_win or True:
+        if is_win:
+            startupinfo = kwargs.get('startupinfo')
             try:
                 startupinfo = startupinfo or subprocess.STARTUPINFO()
                 startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             except AttributeError:
                 pass
-        kwargs['startupinfo'] = startupinfo
+            kwargs['startupinfo'] = startupinfo
         super(Popen, self).__init__(*args, **kwargs)
 
 
@@ -223,7 +228,7 @@ def getCliLocation():
 
     if not WAKATIME_CLI_LOCATION:
         binary = 'wakatime-cli-{osname}-{arch}{ext}'.format(
-            osname=platform.system().lower(),
+            osname=getOsName(),
             arch=architecture(),
             ext='.exe' if is_win else '',
         )
@@ -337,7 +342,7 @@ def extractVersion(text):
 
 
 def cliDownloadUrl():
-    osname = platform.system().lower()
+    osname = getOsName()
     arch = architecture()
 
     validCombinations = [
@@ -462,6 +467,27 @@ def download(url, filePath):
             ssl._create_default_https_context = ssl._create_unverified_context
             urlretrieve(url, filePath)
         raise
+
+
+def createSymlink():
+    if is_win:
+        link = os.path.join(getResourcesFolder(), 'wakatime-cli.exe')
+        if os.path.exists(link):
+            try:
+                os.remove(link)
+            except:
+                log(traceback.format_exc())
+        try:
+            shutil.copy2(getCliLocation(), link)
+        except:
+            log(traceback.format_exc())
+    else:
+        link = os.path.join(getResourcesFolder(), 'wakatime-cli')
+        if not os.path.exists(link):
+            try:
+                os.symlink(getCliLocation(), link)
+            except:
+                pass
 
 
 if __name__ == '__main__':
