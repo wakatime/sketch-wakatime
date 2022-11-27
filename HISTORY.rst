@@ -3,6 +3,14 @@ History
 -------
 
 
+3.0.2 (2022-11-27)
+++++++++++++++++++
+
+- Support api key with waka prefix.
+- Only remove wakatime-cli after finished downloading new one.
+- Improve request handling when installing wakatime-cli.
+
+
 3.0.1 (2021-12-23)
 ++++++++++++++++++
 
