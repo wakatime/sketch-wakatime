@@ -56,8 +56,6 @@ def main(home=None):
     if not isCliLatest():
         downloadCLI()
 
-    createSymlink()
-
 
 if is_py2:
     import codecs
@@ -143,7 +141,7 @@ def parseConfigFile(configFile):
                 return configs
             except ConfigParserError:
                 print(traceback.format_exc())
-                return None
+                return configs
     except IOError:
         return configs
 
@@ -157,9 +155,9 @@ def log(message, *args, **kwargs):
     elif len(kwargs) > 0:
         msg = message.format(**kwargs)
     try:
-        print('[WakaTime] {msg}'.format(msg=msg))
+        print('[WakaTime Install] {msg}'.format(msg=msg))
     except UnicodeDecodeError:
-        print(u('[WakaTime] {msg}').format(msg=u(msg)))
+        print(u('[WakaTime Install] {msg}').format(msg=u(msg)))
 
 
 def getHomeFolder():
@@ -186,6 +184,9 @@ def getConfigFile(internal=None):
 
 def downloadCLI():
     log('Downloading wakatime-cli...')
+
+    if os.path.isdir(os.path.join(getResourcesFolder(), 'wakatime-cli')):
+        shutil.rmtree(os.path.join(getResourcesFolder(), 'wakatime-cli'))
 
     if not os.path.exists(getResourcesFolder()):
         os.makedirs(getResourcesFolder())
@@ -215,6 +216,8 @@ def downloadCLI():
             log(traceback.format_exc())
     except:
         log(traceback.format_exc())
+
+    createSymlink()
 
     log('Finished extracting wakatime-cli.')
 
@@ -265,6 +268,9 @@ def isCliLatest():
     if not localVer:
         log('Local wakatime-cli version not found.')
         return False
+    if localVer == "<local-build>":
+        log('Local wakatime-cli version is <local-build>, skip updating.')
+        return True
 
     log('Current wakatime-cli version is %s' % localVer)
     log('Checking for updates to wakatime-cli...')
@@ -320,8 +326,8 @@ def getLatestCliVersion():
             last_modified = headers.get('Last-Modified')
             if not configs.has_section('internal'):
                 configs.add_section('internal')
-            configs.set('internal', 'cli_version', ver)
-            configs.set('internal', 'cli_version_last_modified', last_modified)
+            configs.set('internal', 'cli_version', str(u(ver)))
+            configs.set('internal', 'cli_version_last_modified', str(u(last_modified)))
             with open(getConfigFile(True), 'w', encoding='utf-8') as fh:
                 configs.write(fh)
 
@@ -337,6 +343,8 @@ def extractVersion(text):
     match = pattern.search(text)
     if match:
         return 'v{ver}'.format(ver=match.group(1))
+    if text and text.strip() == "<local-build>":
+        return "<local-build>"
     return None
 
 
@@ -401,7 +409,10 @@ def request(url, last_modified=None):
 
     try:
         resp = urlopen(req)
-        headers = dict(resp.getheaders()) if is_py2 else resp.headers
+        try:
+            headers = dict(resp.getheaders())
+        except:
+            headers = dict(resp.headers)
         return headers, resp.read(), resp.getcode()
     except HTTPError as err:
         if err.code == 304:
@@ -410,7 +421,10 @@ def request(url, last_modified=None):
             with SSLCertVerificationDisabled():
                 try:
                     resp = urlopen(req)
-                    headers = dict(resp.getheaders()) if is_py2 else resp.headers
+                    try:
+                        headers = dict(resp.getheaders())
+                    except:
+                        headers = dict(resp.headers)
                     return headers, resp.read(), resp.getcode()
                 except HTTPError as err2:
                     if err2.code == 304:
@@ -427,7 +441,10 @@ def request(url, last_modified=None):
             with SSLCertVerificationDisabled():
                 try:
                     resp = urlopen(url)
-                    headers = dict(resp.getheaders()) if is_py2 else resp.headers
+                    try:
+                        headers = dict(resp.getheaders())
+                    except:
+                        headers = dict(resp.headers)
                     return headers, resp.read(), resp.getcode()
                 except HTTPError as err:
                     if err.code == 304:
