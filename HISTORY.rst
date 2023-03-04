@@ -3,6 +3,13 @@ History
 -------
 
 
+3.0.3 (2023-03-04)
+++++++++++++++++++
+
+- First try installing wakatime-cli using Python3, then fallback to Python2.
+  `#9 <https://github.com/wakatime/sketch-wakatime/issues/9>`_
+
+
 3.0.2 (2022-11-27)
 ++++++++++++++++++
 
