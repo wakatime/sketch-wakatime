@@ -42,6 +42,6 @@ Uncheck the setting in Safari → Develop → [computer name] → Automatically 
 
 ## Troubleshooting
 
-The Sketch plugin logs errors to `/var/log/system.log` and `~/.wakatime.log`.
+The Sketch plugin logs errors to `Console.app` and `~/.wakatime.log`.
 
 For more general troubleshooting information, see [wakatime/wakatime#troubleshooting](https://github.com/wakatime/wakatime#troubleshooting).
