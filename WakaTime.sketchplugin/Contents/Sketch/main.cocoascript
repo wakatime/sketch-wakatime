@@ -27,7 +27,7 @@ var onStartup = function(context) {
   WAKATIME_CLI = NSHomeDirectory() + '/.wakatime/wakatime-cli';
   DEBUG_ENABLED = ini.getConfig('settings', 'debug') == 'true';
 
-  debug('Initializing WakaTime v' + VERSION + '...');
+  info('Initializing WakaTime v' + VERSION + '...');
 
   installCLI();
 
@@ -41,7 +41,7 @@ var onSelectionChanged = function(context) {
   var document = action.document;
   var currentFile = document.fileURL();
   if (!currentFile) {
-    debug('Skipping current drawing because not saved to disk.');
+    info('Skipping current drawing because not saved to disk.');
     return;
   }
 
@@ -60,7 +60,7 @@ var onSelectionChanged = function(context) {
 };
 
 var sendHeartbeat = function(file, isWrite) {
-  debug('Sending heartbeat for current drawing:' + file);
+  info('Sending heartbeat for current drawing:' + file);
 
   var args = [
     '--entity',
@@ -71,7 +71,7 @@ var sendHeartbeat = function(file, isWrite) {
   if (isWrite)
     args.push('--write');
 
-  debug(WAKATIME_CLI + args.join(' '));
+  info(WAKATIME_CLI + ' ' + args.join(' '));
 
   // run wakatime-cli in separate process
   var task = [[NSTask alloc] init];
@@ -81,14 +81,23 @@ var sendHeartbeat = function(file, isWrite) {
 };
 
 var installCLI = function() {
-  debug('Checking for wakatime-cli updates...');
-  debug('/usr/bin/python ' + INSTALL_SCRIPT);
+  info('Checking for wakatime-cli updates...');
+  info('/usr/bin/python3 ' + INSTALL_SCRIPT);
 
   // run wakatime-cli in separate process
   var task = [[NSTask alloc] init];
-  [task setLaunchPath: '/usr/bin/python'];
+  [task setLaunchPath: '/usr/bin/python3'];
   [task setArguments: [INSTALL_SCRIPT]];
-  [task launch];
+  try {
+    [task launch];
+  } catch(e) {
+    info('Error installing wakatime-cli: ' + e.toString());
+    info('/usr/bin/python ' + INSTALL_SCRIPT);
+    var task = [[NSTask alloc] init];
+    [task setLaunchPath: '/usr/bin/python'];
+    [task setArguments: [INSTALL_SCRIPT]];
+    [task launch];
+  }
 };
 
 var promptForApiKey = function() {
@@ -105,6 +114,10 @@ var promptForApiKey = function() {
   return api_key;
 }
 
+var info = function(msg) {
+  console.log('[WakaTime] [INFO] ' + msg);
+};
+
 var debug = function(msg) {
-  if (DEBUG_ENABLED) log('[WakaTime] [DEBUG] ' + msg);
+  if (DEBUG_ENABLED) console.log('[WakaTime] [DEBUG] ' + msg);
 };
