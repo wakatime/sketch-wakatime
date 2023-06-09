@@ -2,6 +2,11 @@
 # Changelog
 
 
+## 4.0.0 (2023-06-09)
+
+- Use new JavaScript plugin structure.
+
+
 ## 3.0.3 (2023-03-04)
 
 - First try installing wakatime-cli using Python3, then fallback to Python2.
