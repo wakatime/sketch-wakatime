@@ -50,7 +50,7 @@ To view the output from `console.log`, you have a few different options:
 ### Publishing
 
 ```bash
-skpm publish <bump>
+skpm publish <major|minor|patch>
 ```
 
 (where `bump` can be `patch`, `minor` or `major`)
