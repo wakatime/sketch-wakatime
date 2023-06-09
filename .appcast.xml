@@ -1,12 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.3.zip" sparkle:version="3.0.3" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.2.zip" sparkle:version="3.0.2" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.1.zip" sparkle:version="3.0.1" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.0.zip" sparkle:version="3.0.0" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/2.0.0.zip" sparkle:version="2.0.0" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/1.0.11.zip" sparkle:version="1.0.11" /></item>
-      <item><enclosure url="https://github.com/wakatime/sketch-wakatime/archive/1.0.10.zip" sparkle:version="1.0.10" /></item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/releases/download/v4.0.0/WakaTime.sketchplugin.zip" sparkle:version="4.0.0"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.3.zip" sparkle:version="3.0.3"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.2.zip" sparkle:version="3.0.2"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.1.zip" sparkle:version="3.0.1"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/3.0.0.zip" sparkle:version="3.0.0"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/2.0.0.zip" sparkle:version="2.0.0"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/1.0.11.zip" sparkle:version="1.0.11"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/wakatime/sketch-wakatime/archive/1.0.10.zip" sparkle:version="1.0.10"/>
+    </item>
   </channel>
 </rss>
