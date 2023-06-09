@@ -1,0 +1,36 @@
+{
+  "name": "WakaTime",
+  "description": "",
+  "version": "3.0.3",
+  "engines": {
+    "sketch": ">=3.0"
+  },
+  "skpm": {
+    "name": "WakaTime",
+    "manifest": "src/manifest.json",
+    "main": "WakaTime.sketchplugin",
+    "assets": [
+      "assets/**/*"
+    ]
+  },
+  "scripts": {
+    "build": "skpm-build",
+    "watch": "skpm-build --watch",
+    "start": "skpm-build --watch --run",
+    "postinstall": "npm run build && skpm-link"
+  },
+  "devDependencies": {
+    "@skpm/builder": "^0.8.0"
+  },
+  "dependencies": {
+    "@skpm/child_process": "^0.4.2",
+    "@skpm/fs": "^0.2.6",
+    "@skpm/process": "^0.1.5",
+    "@skpm/os": "^0.1.1"
+  },
+  "repository" : {
+    "type": "git",
+    "url": "git+https://github.com/wakatime/sketch-wakatime.git"
+  },
+  "author": "WakaTime <support@wakatime.com>"
+}

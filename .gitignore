@@ -1,2 +1,16 @@
+# build artifacts
+*.sketchplugin
+
+# npm
+node_modules
+.npm
+npm-debug.log
+
+# mac
 .DS_Store
-*.pyc
+
+# WebStorm
+.idea
+
+# sketch
+# sketch-assets

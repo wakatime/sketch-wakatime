@@ -33,11 +33,29 @@ To change your api key, copy it from your [Settings page](https://wakatime.com/s
 Additional settings are in `$HOME/.wakatime.cfg` for [wakatime cli](https://github.com/wakatime/wakatime#configuring).
 
 
-## Turn off Safari Web Inspector
+## Contributing
 
-Uncheck the setting in Safari → Develop → [computer name] → Automatically Show Web Inspector for JSContexts.
+To run this plugin from a local clone of the repo:
 
-![Turn off Web Inspector](./safari-web-inspector.png)
+1. `git clone git@github.com:wakatime/sketch-wakatime.git`
+2. `cd sketch-wakatime`
+3. `ln -s "$PWD/sketch-wakatime/WakaTime.sketchplugin" ~/Library/Application\ Support/com.bohemiancoding.sketch3/Plugins/WakaTime.sketchplugin`
+4. `npm run watch`
+
+To view the output from `console.log`, you have a few different options:
+
+- Use the [`sketch-dev-tools`](https://github.com/skpm/sketch-dev-tools)
+- Run `skpm log` in your Terminal, with the optional `-f` argument (`skpm log -f`) which causes `skpm log` to not stop when the end of logs is reached, but rather to wait for additional data to be appended to the input
+
+### Publishing
+
+```bash
+skpm publish <bump>
+```
+
+(where `bump` can be `patch`, `minor` or `major`)
+
+`skpm publish` will create a new release on your GitHub repository and create an appcast file in order for Sketch users to be notified of the update.
 
 
 ## Troubleshooting

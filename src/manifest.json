@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sketch-hq/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "icon": "icon.png",
+  "identifier" : "com.wakatime.sketch.plugin",
+  "description" : "Time tracking and metrics automatically generated from your Sketch usage.",
+  "scope": "application",
+  "compatibleVersion": 53,
+  "commands": [
+    {
+      "name": "API Key",
+      "identifier": "wakatime.apikey",
+      "script": "./promptForApiKey.js"
+    },
+    {
+      "name": "Selection Changed",
+      "identifier": "wakatime.selection-changed",
+      "script": "./onSelectionChanged.js",
+      "handlers": {
+        "actions": {
+          "SelectionChanged.finish": "onSelectionChanged"
+        }
+      }
+    },
+    {
+      "name": "Document Saved",
+      "identifier": "wakatime.document-saved",
+      "script": "./onDocumentSaved.js",
+      "handlers": {
+        "actions": {
+          "DocumentSaved": "onDocumentSaved"
+        }
+      }
+    },
+    {
+      "name": "Startup",
+      "identifier": "wakatime.startup",
+      "script": "./onStartup.js",
+      "handlers": {
+        "actions": {
+          "Startup": "onStartup"
+        }
+      }
+    }
+  ],
+  "menu": {
+    "title": "WakaTime",
+    "items": [
+      "wakatime.apikey"
+    ]
+  }
+}
