@@ -2,6 +2,11 @@
 # Changelog
 
 
+## 4.0.1 (2023-06-29)
+
+- Output errors from wakatime-cli to Console.app.
+
+
 ## 4.0.0 (2023-06-09)
 
 - Use new JavaScript plugin structure.
