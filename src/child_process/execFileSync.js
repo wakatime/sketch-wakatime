@@ -1,4 +1,3 @@
-import { debug } from '../logger';
 import { spawnSync } from './spawnSync';
 
 function validateTimeout(timeout) {
@@ -15,7 +14,7 @@ function validateMaxBuffer(maxBuffer) {
 
 export function execFileSync(file, args, options) {
   var defaultOptions = {
-    encoding: 'buffer',
+    encoding: 'utf8',
     timeout: 0,
     maxBuffer: 200 * 1024,
     killSignal: 'SIGTERM',
@@ -50,7 +49,7 @@ export function execFileSync(file, args, options) {
   });
 
   if (child.status !== 0) {
-    let error = new Error(`Failed to run ${child.status}: ` + String(child.stderr || child.stdout));
+    let error = new Error(`Failed to run ${child.status}: ${child.stderr}${child.stdout}`);
     error.pid = child.pid;
     error.status = child.status;
     error.stdout = child.stdout;

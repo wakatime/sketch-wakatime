@@ -1,6 +1,5 @@
 import { normalizeSpawnArguments } from './normalizeSpawnArguments';
 import { handleData } from './handleData';
-import { error } from '../logger';
 
 export function spawnSync(_command, _args, _options) {
   var opts = normalizeSpawnArguments(_command, _args, _options);
@@ -54,24 +53,20 @@ export function spawnSync(_command, _args, _options) {
       stdoutIgnored = true;
     } else if (opts.stdio[1] === 1) {
       data = pipe.fileHandleForReading().readDataToEndOfFile();
-      stdoutValue = handleData(data, options.encoding || 'buffer');
-      error(stdoutValue);
+      stdoutValue = handleData(data, options.encoding || 'utf8');
     } else if (opts.stdio[1] === 2) {
       data = pipe.fileHandleForReading().readDataToEndOfFile();
-      stdoutValue = handleData(data, options.encoding || 'buffer');
-      error(stdoutValue);
+      stdoutValue = handleData(data, options.encoding || 'utf8');
     }
 
     if (opts.stdio[2] === 'ignored') {
       stderrIgnored = true;
     } else if (opts.stdio[2] === 1) {
       data = errPipe.fileHandleForReading().readDataToEndOfFile();
-      stderrValue = handleData(data, options.encoding || 'buffer');
-      error(stderrValue);
+      stderrValue = handleData(data, options.encoding || 'utf8');
     } else if (opts.stdio[2] === 2) {
       data = errPipe.fileHandleForReading().readDataToEndOfFile();
-      stderrValue = handleData(data, options.encoding || 'buffer');
-      error(stderrValue);
+      stderrValue = handleData(data, options.encoding || 'utf8');
     }
 
     let stdout = null;
@@ -80,7 +75,7 @@ export function spawnSync(_command, _args, _options) {
         stdout = stdoutValue;
       } else {
         data = pipe.fileHandleForReading().readDataToEndOfFile();
-        stdout = handleData(data, options.encoding || 'buffer');
+        stdout = handleData(data, options.encoding || 'utf8');
       }
     }
 
@@ -90,7 +85,7 @@ export function spawnSync(_command, _args, _options) {
         stderr = stderrValue;
       } else {
         data = errPipe.fileHandleForReading().readDataToEndOfFile();
-        stderr = handleData(data, options.encoding || 'buffer');
+        stderr = handleData(data, options.encoding || 'utf8');
       }
     }
 
