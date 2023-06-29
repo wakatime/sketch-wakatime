@@ -2,6 +2,11 @@
 # Changelog
 
 
+## 4.0.2 (2023-06-29)
+
+- Only log wakatime-cli output when not empty.
+
+
 ## 4.0.1 (2023-06-29)
 
 - Output errors from wakatime-cli to Console.app.
