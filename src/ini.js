@@ -7,7 +7,7 @@ export function getConfig(section, key) {
   let contents = '';
   try {
     contents = fs.readFileSync(file, { encoding: 'utf-8' });
-  } catch (e) { }
+  } catch (e) {}
   if (contents) {
     let currentSection = '';
     let lines = contents.split('\n');
@@ -39,7 +39,7 @@ export function setConfig(section, key, val) {
   let contents = '';
   try {
     contents = fs.readFileSync(file, { encoding: 'utf-8' });
-  } catch (e) { }
+  } catch (e) {}
   if (contents) {
     let lines = contents.split('\n');
     for (let i in lines) {
@@ -77,4 +77,13 @@ export function setConfig(section, key, val) {
     output.push(key + ' = ' + val);
   }
   fs.writeFileSync(file, output.join('\n'), { encoding: 'utf8' });
+}
+
+export function isDebugEnabled() {
+  let threadDictionary = NSThread.mainThread().threadDictionary();
+  if (threadDictionary.wakatimeDebug === true || threadDictionary.wakatimeDebug === false) return threadDictionary.wakatimeDebug;
+
+  const debug = getConfig('settings', 'debug');
+  threadDictionary.wakatimeDebug = debug === 'true';
+  return threadDictionary.wakatimeDebug;
 }

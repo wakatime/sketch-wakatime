@@ -1,8 +1,10 @@
 import { getSelectedDocument } from 'sketch/dom';
+
+import { debug } from './logger';
 import { sendHeartbeat } from './sendHeartbeat';
 
 export function onSelectionChanged(context) {
-  // console.log('onSelectionChanged');
+  debug('onSelectionChanged');
 
   const document = getSelectedDocument();
   if (!document) return;

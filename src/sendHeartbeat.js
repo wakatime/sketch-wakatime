@@ -1,16 +1,22 @@
 import path from 'path';
 import process from '@skpm/process';
-import child_process from '@skpm/child_process';
 
+import { debug, error } from './logger';
+import { execFileSync } from './child_process/execFileSync';
 import { getHomeDirectory } from './utils';
 
 export function sendHeartbeat(context, file, isWrite) {
-  // console.log('Sending heartbeat:' + file);
+  debug('Sending heartbeat: ' + file);
   const sketchVersion = NSBundle.mainBundle().infoDictionary().CFBundleShortVersionString;
   const bin = getHomeDirectory() + '/.wakatime/wakatime-cli';
   const args = ['--entity', file, '--plugin', 'sketch/' + sketchVersion + ' sketch-wakatime/' + context.plugin.version()];
   if (isWrite) args.push('--write');
 
-  // console.log(bin + ' ' + args.join(' '));
-  child_process.execFile(bin, args);
+  debug(bin + ' ' + args.join(' '));
+  try {
+    const stdout = execFileSync(bin, args);
+    debug(String(stdout));
+  } catch (e) {
+    error(e);
+  }
 }

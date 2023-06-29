@@ -1,9 +1,11 @@
 import { getSelectedDocument } from 'sketch/dom';
+
+import { debug } from './logger';
 import { sendHeartbeat } from './sendHeartbeat';
 
 export function onDocumentSaved(context) {
   if (context.actionContext.autosaved == 1) return;
-  // console.log('onDocumentSaved');
+  debug('onDocumentSaved');
 
   const document = getSelectedDocument();
   if (!document) return;
