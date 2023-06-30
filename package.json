@@ -1,7 +1,7 @@
 {
   "name": "WakaTime",
   "description": "",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "engines": {
     "sketch": ">=3.0"
   },
