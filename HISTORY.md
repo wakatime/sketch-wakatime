@@ -2,6 +2,11 @@
 # Changelog
 
 
+## 4.0.4 (2023-06-30)
+
+- Url decode file paths before sending to wakatime-cli.
+
+
 ## 4.0.3 (2023-06-30)
 
 - Fix entity argument typo.
