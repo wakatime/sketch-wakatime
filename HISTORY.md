@@ -2,6 +2,11 @@
 # Changelog
 
 
+## 4.0.3 (2023-06-30)
+
+- Fix entity argument typo.
+
+
 ## 4.0.2 (2023-06-29)
 
 - Only log wakatime-cli output when not empty.
