@@ -6,6 +6,7 @@ import { execFileSync } from './child_process/execFileSync';
 import { getHomeDirectory } from './utils';
 
 export function sendHeartbeat(context, file, isWrite) {
+  file = decodeURI(file);
   debug('Sending heartbeat: ' + file);
   const sketchVersion = NSBundle.mainBundle().infoDictionary().CFBundleShortVersionString;
   const bin = getHomeDirectory() + '/.wakatime/wakatime-cli';
