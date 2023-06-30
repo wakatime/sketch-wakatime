@@ -9,7 +9,7 @@ export function sendHeartbeat(context, file, isWrite) {
   debug('Sending heartbeat: ' + file);
   const sketchVersion = NSBundle.mainBundle().infoDictionary().CFBundleShortVersionString;
   const bin = getHomeDirectory() + '/.wakatime/wakatime-cli';
-  const args = ['--entiy', file, '--plugin', 'sketch/' + sketchVersion + ' sketch-wakatime/' + context.plugin.version()];
+  const args = ['--entity', file, '--plugin', 'sketch/' + sketchVersion + ' sketch-wakatime/' + context.plugin.version()];
   if (isWrite) args.push('--write');
 
   debug(bin + ' ' + args.join(' '));
