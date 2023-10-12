@@ -4,9 +4,7 @@
 
 Time tracking and metrics automatically generated from your [Sketch](http://www.sketchapp.com/) usage.
 
-
 ## Installation
-
 
 1. Download the [latest release](https://github.com/wakatime/sketch-wakatime/releases/latest).
 
@@ -20,18 +18,15 @@ Time tracking and metrics automatically generated from your [Sketch](http://www.
 
 6. Visit <https://wakatime.com> to see your logged time.
 
-
 ## Screen Shots
 
 ![Project Overview](https://wakatime.com/static/img/ScreenShots/Screen-Shot-2016-03-21.png)
-
 
 ## Configuring
 
 To change your api key, copy it from your [Settings page](https://wakatime.com/settings#apikey), then paste into Sketch `Plugins → WakaTime`.
 
 Additional settings are in `$HOME/.wakatime.cfg` for [wakatime cli](https://github.com/wakatime/wakatime#configuring).
-
 
 ## Contributing
 
@@ -57,10 +52,9 @@ skpm publish <major|minor|patch>
 
 `skpm publish` will create a new release on your GitHub repository and create an appcast file in order for Sketch users to be notified of the update.
 
-
 ## Troubleshooting
 
-The Sketch plugin logs errors to `Console.app` and `~/.wakatime.log`.
+The Sketch plugin logs errors to `Console.app` and `~/.wakatime/wakatime.log`.
 
 For more info on debugging Sketch plugins see the [official docs](https://developer.sketch.com/plugins/debugging).
 
